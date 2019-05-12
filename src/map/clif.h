@@ -112,6 +112,7 @@ void clif_misceffect(struct block_list* bl, int type);
 void clif_misceffect2(struct block_list *bl, int type);
 void clif_misceffect3(int fd, int id, int type);
 void clif_changeoption(struct block_list *bl);
+void clif_changeoption_single(struct block_list* bl, struct map_session_data *tsd);
 void clif_changeoption2(struct block_list *bl);
 void clif_useitemack(struct map_session_data *sd, int idx, int amount, unsigned char ok);
 void clif_GlobalMessage(struct block_list *bl,const char *message, int target);
@@ -180,6 +181,8 @@ int clif_elemoutsight(struct block_list *bl, va_list ap);
 void clif_class_change(struct block_list *bl, int class_, int type);
 
 void clif_skillinfoblock(struct map_session_data *sd);
+void clif_addskill(struct map_session_data *sd, int skill_num);
+void clif_delskill(struct map_session_data *sd, int skill_num);
 void clif_skillup(struct map_session_data *sd, int skill_num);
 
 void clif_skillcasting(struct block_list* bl,int src_id,int dst_id,int dst_x,int dst_y,int skill_num,int casttime);

@@ -66,17 +66,17 @@
 
 #define PVP_CALCRANK_INTERVAL 1000	// PVP順位計算の間隔
 
-static int exp_table[20][MAX_LEVEL];
+static int exp_table[22][MAX_LEVEL];
 
 // 属性テーブル
 int attr_fix_table[MAX_ELE_LEVEL][ELE_MAX][ELE_MAX];
 
 // JOB TABLE
-//    NV,SM,MG,AC,AL,MC,TF,KN,PR,WZ,BS,HT,AS,CR,MO,SA,RG,AM,BA,DC,SNV,TK,SG,SL,GS,NJ,MB,DK,DA,RK,WL,RA,AB,NC,GC,LG,SO,MI,WA,SR,GN,SC,ESNV,KG,OB
+//    NV,SM,MG,AC,AL,MC,TF,KN,PR,WZ,BS,HT,AS,CR,MO,SA,RG,AM,BA,DC,SNV,TK,SG,SL,GS,NJ,MB,DK,DA,RK,WL,RA,AB,NC,GC,LG,SO,MI,WA,SR,GN,SC,ESNV,KG,OB,RB,SU
 int max_job_table[PC_UPPER_MAX][PC_JOB_MAX] = {
-	{ 10,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,99,50,50,50,70,70,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50 }, // 通常
-	{ 10,50,50,50,50,50,50,70,70,70,70,70,70,70,70,70,70,70,70,70,99,50,50,50,70,70,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50 }, // 転生
-	{ 10,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,99,50,50,50,70,70,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50 }, // 養子
+	{ 10,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,99,50,50,50,70,70,50,50,50,60,60,60,60,60,60,60,60,60,60,60,60,60,50,60,60,60,50 }, // 通常
+	{ 10,50,50,50,50,50,50,70,70,70,70,70,70,70,70,70,70,70,70,70,99,50,50,50,70,70,50,50,50,60,60,60,60,60,60,60,60,60,60,60,60,60,50,60,60,60,50 }, // 転生
+	{ 10,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,99,50,50,50,70,70,50,50,50,60,60,60,60,60,60,60,60,60,60,60,60,60,50,60,60,60,50 }, // 養子
 };
 
 static const unsigned int equip_pos[EQUIP_INDEX_MAX] = {
@@ -1109,12 +1109,16 @@ unsigned int pc_get_job_bit(int job)
 			bit = 0x08000000;
 			break;
 		case PC_JOB_GS:		// ガンスリンガー
+		case PC_JOB_RB:		// リベリオン（暫定）
 			bit = 0x10000000;
 			break;
 		case PC_JOB_NJ:		// 忍者
 		case PC_JOB_KG:		// 影狼（暫定）
 		case PC_JOB_OB:		// 朧（暫定）
 			bit = 0x20000000;
+			break;
+		case PC_JOB_SUM:		// サモナー（暫定）
+			bit = 0x40000000;
 			break;
 	}
 
@@ -4012,6 +4016,14 @@ struct pc_base_job pc_calc_base_job(int b_class)
 			bj.job   = PC_JOB_OB;
 			bj.upper = PC_UPPER_NORMAL;
 			break;
+		case PC_CLASS_RB:
+			bj.job   = PC_JOB_RB;
+			bj.upper = PC_UPPER_NORMAL;
+			break;
+		case PC_CLASS_SUM:
+			bj.job   = PC_JOB_SUM;
+			bj.upper = PC_UPPER_NORMAL;
+			break;
 		default:
 			bj.job   = PC_JOB_NV;
 			bj.upper = PC_UPPER_NORMAL;
@@ -4132,6 +4144,12 @@ int pc_calc_class_job(int job, int upper)
 			break;
 		case PC_JOB_OB:
 			class_ = PC_CLASS_OB;
+			break;
+		case PC_JOB_RB:
+			class_ = PC_CLASS_RB;
+			break;
+		case PC_JOB_SUM:
+			class_ = PC_CLASS_SUM;
 			break;
 	}
 
@@ -4376,6 +4394,12 @@ int pc_calc_job_class(int class_)
 			break;
 		case PC_CLASS_OB:
 			job = PC_JOB_OB;
+			break;
+		case PC_CLASS_RB:
+			job = PC_JOB_RB;
+			break;
+		case PC_CLASS_SUM:
+			job = PC_JOB_SUM;
 			break;
 	}
 
@@ -4677,6 +4701,9 @@ int pc_get_base_class(int class_, int type)
 		case PC_CLASS_KG:
 		case PC_CLASS_OB:
 			class_ = PC_CLASS_NJ;
+			break;
+		case PC_CLASS_RB:
+			class_ = PC_CLASS_GS;
 			break;
 		}
 	}
@@ -5085,6 +5112,7 @@ int pc_nextbaseexp(struct map_session_data *sd)
 		case PC_CLASS_NC2_B:	// 養子メカニック(騎乗)
 		case PC_CLASS_KG:	// 影狼
 		case PC_CLASS_OB:	// 朧
+		case PC_CLASS_RB:	// リベリオン
 			table = 7;
 			break;
 		case PC_CLASS_RK_H:	// 転生ルーンナイト
@@ -5108,9 +5136,13 @@ int pc_nextbaseexp(struct map_session_data *sd)
 		case PC_CLASS_RK4_H:	// 転生ルーンナイト(騎乗)
 		case PC_CLASS_RK5_H:	// 転生ルーンナイト(騎乗)
 		case PC_CLASS_RK6_H:	// 転生ルーンナイト(騎乗)
+		case PC_CLASS_SUM:	// サモナー
+		case PC_CLASS_SUM_B:	// 養子サモナー
+			table = 8;
+			break;
 		case PC_CLASS_ESNV:	// 拡張スーパーノービス
 		case PC_CLASS_ESNV_B:	// 養子拡張スーパーノービス
-			table = 8;
+			table = 9;
 			break;
 		default:	// それ以外
 			table = 1;
@@ -5136,7 +5168,7 @@ int pc_nextjobexp(struct map_session_data *sd)
 	switch(sd->status.class_) {
 		case PC_CLASS_NV:	// ノービス
 		case PC_CLASS_NV_B:	// 養子ノービス
-			table = 9;
+			table = 10;
 			break;
 		case PC_CLASS_SM:	// ソードマン
 		case PC_CLASS_MG:	// マジシャン
@@ -5152,7 +5184,7 @@ int pc_nextjobexp(struct map_session_data *sd)
 		case PC_CLASS_TF_B:	// 養子シーフ
 		case PC_CLASS_TK:	// テコンキッド
 		case PC_CLASS_MB:	// キョンシー
-			table = 10;
+			table = 11;
 			break;
 		case PC_CLASS_KN:	// ナイト
 		case PC_CLASS_PR:	// プリースト
@@ -5187,14 +5219,14 @@ int pc_nextjobexp(struct map_session_data *sd)
 		case PC_CLASS_SL:	// ソウルリンカー
 		case PC_CLASS_DK:	// デスナイト
 		case PC_CLASS_DA:	// ダークコレクター
-			table = 11;
+			table = 12;
 			break;
 		case PC_CLASS_SNV:	// スーパーノービス
 		case PC_CLASS_SNV_B:	// 養子スーパーノービス
-			table = 12;
+			table = 13;
 			break;
 		case PC_CLASS_NV_H:	// 転生ノービス
-			table = 13;
+			table = 14;
 			break;
 		case PC_CLASS_SM_H:	// 転生ソードマン
 		case PC_CLASS_MG_H:	// 転生マジシャン
@@ -5202,7 +5234,7 @@ int pc_nextjobexp(struct map_session_data *sd)
 		case PC_CLASS_AL_H:	// 転生アコライト
 		case PC_CLASS_MC_H:	// 転生マーチャント
 		case PC_CLASS_TF_H:	// 転生シーフ
-			table = 14;
+			table = 15;
 			break;
 		case PC_CLASS_KN_H:	// ロードナイト
 		case PC_CLASS_PR_H:	// ハイプリースト
@@ -5219,15 +5251,15 @@ int pc_nextjobexp(struct map_session_data *sd)
 		case PC_CLASS_BA_H:	// クラウン
 		case PC_CLASS_DC_H:	// ジプシー
 		case PC_CLASS_CR2_H:	// パラディン(騎乗)
-			table = 15;
+			table = 16;
 			break;
 		case PC_CLASS_SG:	// 拳聖
 		case PC_CLASS_SG2:	// 拳聖(融合)
-			table = 16;
+			table = 17;
 			break;
 		case PC_CLASS_GS:	// ガンスリンガー
 		case PC_CLASS_NJ:	// 忍者
-			table = 17;
+			table = 18;
 			break;
 		case PC_CLASS_RK:	// ルーンナイト
 		case PC_CLASS_WL:	// ウォーロック
@@ -5269,7 +5301,8 @@ int pc_nextjobexp(struct map_session_data *sd)
 		case PC_CLASS_NC2_B:	// 養子メカニック(騎乗)
 		case PC_CLASS_KG:	// 影狼
 		case PC_CLASS_OB:	// 朧
-			table = 18;
+		case PC_CLASS_RB:	// リベリオン
+			table = 19;
 			break;
 		case PC_CLASS_RK_H:	// 転生ルーンナイト
 		case PC_CLASS_WL_H:	// 転生ウォーロック
@@ -5294,7 +5327,11 @@ int pc_nextjobexp(struct map_session_data *sd)
 		case PC_CLASS_RK6_H:	// 転生ルーンナイト(騎乗)
 		case PC_CLASS_ESNV:	// 拡張スーパーノービス
 		case PC_CLASS_ESNV_B:	// 養子拡張スーパーノービス
-			table = 19;
+			table = 20;
+			break;
+		case PC_CLASS_SUM:	// サモナー
+		case PC_CLASS_SUM_B:	// 養子サモナー
+			table = 21;
 			break;
 		default:
 			table = 11;
@@ -5548,7 +5585,7 @@ static int pc_check_skillup(struct map_session_data *sd,int skill_num)
 
 	skill_point = pc_calc_skillpoint(sd);
 
-	if(skill_point < 9)
+	if(skill_point < 9 || pc_isdoram(sd))
 		up_level = 0;
 	else if(sd->status.skill_point >= sd->status.job_level && skill_point < 58 && (pc_is2ndclass(sd) || pc_is3rdclass(sd)))
 		up_level = 1;
@@ -6717,7 +6754,7 @@ int pc_itemheal(struct map_session_data *sd,int hp,int sp)
 				hp = hp * battle_config.ranker_potion_bonus / 100;
 		}
 		if(sd->sc.data[SC_ISHA].timer != -1)		// バイタリティアクティベーション
-			sp = sp * 15 / 100;
+			sp = sp * 50 / 100;
 	}
 	if(hp+sd->status.hp > sd->status.max_hp)
 		hp = sd->status.max_hp - sd->status.hp;
@@ -9367,12 +9404,12 @@ int pc_readdb(void)
 	}
 	i = 0;
 	while(fgets(line,1020,fp)) {
-		int bn,b1,b2,b3,b4,b5,b6,b7,b8,jn,j1,j2,j3,j4,j5,j6,j7,j8,j9,j10;
+		int bn,b1,b2,b3,b4,b5,b6,b7,b8,b9,jn,j1,j2,j3,j4,j5,j6,j7,j8,j9,j10,j11;
 		if(line[0] == '\0' || line[0] == '\r' || line[0] == '\n')
 			continue;
 		if(line[0] == '/' && line[1] == '/')
 			continue;
-		if(sscanf(line,"%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",&bn,&b1,&b2,&b3,&b4,&b5,&b6,&b7,&b8,&jn,&j1,&j2,&j3,&j4,&j5,&j6,&j7,&j8,&j9,&j10) != 20)
+		if(sscanf(line,"%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",&bn,&b1,&b2,&b3,&b4,&b5,&b6,&b7,&b8,&b9,&jn,&j1,&j2,&j3,&j4,&j5,&j6,&j7,&j8,&j9,&j10,&j11) != 22)
 			continue;
 		exp_table[0][i]  = bn;
 		exp_table[1][i]  = b1;
@@ -9383,17 +9420,19 @@ int pc_readdb(void)
 		exp_table[6][i]  = b6;
 		exp_table[7][i]  = b7;
 		exp_table[8][i]  = b8;
-		exp_table[9][i]  = jn;
-		exp_table[10][i] = j1;
-		exp_table[11][i] = j2;
-		exp_table[12][i] = j3;
-		exp_table[13][i] = j4;
-		exp_table[14][i] = j5;
-		exp_table[15][i] = j6;
-		exp_table[16][i] = j7;
-		exp_table[17][i] = j8;
-		exp_table[18][i] = j9;
-		exp_table[19][i] = j10;
+		exp_table[9][i]  = b9;
+		exp_table[10][i] = jn;
+		exp_table[11][i] = j1;
+		exp_table[12][i] = j2;
+		exp_table[13][i] = j3;
+		exp_table[14][i] = j4;
+		exp_table[15][i] = j5;
+		exp_table[16][i] = j6;
+		exp_table[17][i] = j7;
+		exp_table[18][i] = j8;
+		exp_table[19][i] = j9;
+		exp_table[20][i] = j10;
+		exp_table[21][i] = j11;
 		i++;
 		if(i >= MAX_LEVEL)
 			break;

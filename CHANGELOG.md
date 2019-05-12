@@ -1,4 +1,223 @@
 ----------------------------------------
+//1337 [2019/05/06] by refis
+
+・リファレンスの更新漏れを訂正（db_ref.txt）
+
+・2015-10-29aRagexeRE、2016-12-28aRagexeRE、2017-06-14bRagexeREのpacket_dbを追加（packet_db.txt）
+	-> 構造体「party_member」に「class_」を格納するよう追加（mmo.h）
+	-> パケット拡張、新規追加に対応（login.c, int_party.c, intif.c, party.*, clif.c）
+	-> 内部パケットの拡張（int_party.c, inter.c, intif.c）
+	-> 足りなくなるのでMAX_PACKET_DBの拡張（clif.c）
+
+・新パケットのエラー対策でダミー関数を用意する（clif.c, packet_db.txt）
+
+・PACKETVERを「20151029」に引き上げ（bcc32_make.bat Makefile vc_make.bat *.dsp）
+
+----------------------------------------
+//1336 [2019/05/06] by refis
+
+・サモナー追加関連アイテムを追加（item_db.txt, item_db2.txt）
+
+・MAX_ITEMGROUPを15に拡張（item_group_db.txt, map.h）
+
+・3次職追加スキル、サモナースキルをskill_tree.txtに追記（skill_tree.txt）
+
+----------------------------------------
+//1335 [2019/05/05] by refis
+
+・イヌハッカシャワー、イヌハッカメテオの効果がなかったのを修正（skill_unit_db.txt, skill.c, status.c）
+
+----------------------------------------
+//1334 [2019/05/04] by refis
+
+・レッケンベル社の噂クエストの討伐判定ミスで進行できなかったのを修正（npc_memorial_worsef.sc）
+
+・luascript終了処理のチェックを強化（luascript.c）
+
+----------------------------------------
+//1333 [2019/05/04] by refis
+
+・ニャングラス、警戒の効果がなかったのを修正（skill_cast_db.txt, skill_unit_db.txt, skill.*, status.c）
+
+・アクラウスダッシュの遠距離攻撃力増加判定を修正（battle.c）
+
+・Patch 1332 follow up（battle.c）
+
+----------------------------------------
+//1332 [2019/05/01] by refis
+
+・ログイン認証処理を調整（char.c）
+
+・clif_addskill、clif_delskillを追加（clif.*）
+
+・クールダウン計算をskill_cooldownfixとして分離させる（skill.*）
+
+・status_get_jlvを追加して直接参照を避ける（battle.c, status.*）
+
+・ドラム族DB修正（scdata_db.txt, skill_cast_db.txt, skill.txt）
+
+・ドラム族SCRIPT準備（script/npc/*）
+
+・ドラム族SKILL準備（src/common/mmo.h, src/map/*）
+
+----------------------------------------
+//1331 [2019/04/05] by refis
+
+・非消費アイテムが消費されてしまっていたのを修正（item_db2.txt）
+
+・NULL判定が正しくないのを修正（clif.c）
+
+・DB上の定義ミスを修正（skill.txt, skill_require_db.txt）
+
+・DB更新に合わせてドラム族DB準備（skill_cast_db.txt, skill.txt, skill_require_db.txt）
+
+----------------------------------------
+//1330 [2019/01/03] by refis
+
+・1次転職時のアカデミー関係メッセージを表示させる（npc/job/*）
+
+・typo修正（npc_quest_ac_agent.sc）
+
+----------------------------------------
+//1329 [2018/12/30] by refis
+
+・コンパイルエラーの修正（pc.c）
+
+・傭兵にロキのデータを追加（merc_db.txt, merc_skill_tree.txt）
+
+----------------------------------------
+//1328 [2018/12/29] by refis
+
+・exp_tableが正常に読み込まれない不具合を修正（pc.c）
+	#6 , Thanks niconicop さん
+
+----------------------------------------
+//1327 [2018/12/16] by refis
+
+・memorial_db.txtの更新（memorial_db.txt, memorial.c）
+
+・傭兵スキル「マインドブラスター」実装
+（skill_cast_db.txt, skill_db.txt, skill_db2.txt, skill_require_db.txt, mmo.h, skill.c）
+
+----------------------------------------
+//1326 [2018/12/15] by refis
+
+・クライアント対応、リベリオン、ドラム族準備
+（char_auriga.conf, const.txt, job_*_db.txt, main.sql, Auriga1326_changetable.sql,
+  char.*, chardb_*.*, journal.c, mmo.h, clif.c, pc.*）
+
+・typo修正（script.c）
+
+・clif_changeoption_singleの追加（clif.*）
+
+・キングスグレイス状態の相手に攻撃するときはパケット段階で遮断させる（clif.c）
+
+・バイタリティアクティベーションのSP回復量を修正（pc.c）
+
+・各職のレベル限界、ステータス限界、必要経験値をRRに対応（battle_auriga.conf, exp.txt, pc.c）
+
+・ジョブ補正値をRR対応（job_db*.txt）
+
+----------------------------------------
+//1325 [2018/12/14] by refis
+
+・イリュージョンドーピングの射程、使用時エラー修正（skill_db.txt, skill.c, status.c）
+
+・マグマエラプション盗作エラー修正（skill.c）
+
+・ニューマのエフェクト問題解決のため処理を少し変えてみる（skill_unit_db.txt, skill.c）
+
+----------------------------------------
+//1324 [2018/12/13] by refis
+
+・スキルをRR仕様に修正
+（scdata_db.txt, skill_cast_db.txt, skill_db.txt, skill_db2.txt, skill_require_db.txt, skill_unit_db.txt, battle.c, skill.c, status.*, unit.c）
+
+----------------------------------------
+//1323 [2018/12/09] by refis
+
+・転生時に騎乗生物のチェック抜けがあったので修正（npc_job_transmigration.sc）
+
+・スキルのRR仕様へ修正の続き
+（skill_cast_db.txt, skill_db.txt, skill_db2.txt, skill_require_db.txt, skill_unit_db.txt, battle.c, skill.*, status.c）
+
+----------------------------------------
+//1322 [2018/12/03] by refis
+
+・モンスター使用スキルを修正（mob_skill_db.txt）
+
+・アイテムグループを追加（item_group_db.txt, map.h）
+
+・状態異常アイコンを更新（status.*）
+
+・スキルのRR仕様へ修正の続き
+（skill_cast_db.txt, skill_db.txt, skill_db2.txt, skill_require_db.txt, skill_require_db2.txt, battle.c, skill.*, status.*）
+
+・NPCスキル[フレイムクロス]、[パルスストライクII]、[ダンシングブレード]、
+　[ダークピアーシング]、[デスサモン]を実装
+（skill_cast_db.txt, skill_db.txt, skill_unit_db.txt, battle.c, skill.c, status.c）
+
+----------------------------------------
+//1321 [2018/11/30] by refis
+
+・キャラクター削除待機時間を10秒に修正（char_auriga.conf）
+
+・セカンドコスチュームNPCを更新（npc_misc_pointshop.sc）
+	Thanks magnus さん
+
+・上位の次元ブーツにスロットエンチャントしたときの交換不具合を修正（npc_quest_glastheim.sc）
+	Thanks rinaserver さん
+
+----------------------------------------
+//1320 [2018/11/07] by refis
+
+・ホラーおもちゃ工場実装 (map_auriga.conf, npc_memorial_horroroftoy.sc)
+	-> 関連アイテム交換NPC実装 (npc_town_lutie.sc)
+	-> item_db, monster_dbの更新 (item_db.txt, item_random.txt, mob_db.txt, mob_skill_db.txt)
+	-> const.txtの更新 (const.txt)
+	-> mapflagの更新 (mapflag_memorial.sc)
+	-> quest_dbの更新 (quest_db.txt)
+
+----------------------------------------
+//1319 [2018/11/04] by refis
+
+・ヴェルキリーヘルム作成NPCを更新（npc_quest_hat5.sc）
+
+・パイルバンカー作成NPCを追加（map_auriga.conf, npc_quest_pilebunker.sc）
+
+----------------------------------------
+//1318 [2018/11/03] by refis
+
+・スクリプト関数「unequip」を拡張
+	-> -2と-3指定で取り外し範囲を変えられるようにしました（doc/script_ref.txt, script.c）
+
+・カプラ職員メニューに装備取り外し、倉庫設定変更を追加（quest_db.txt, npc_misc_kafra.sc）
+	-> 倉庫メニューの表示形式も合わせて更新
+
+・上記追加に合わせてfunction利用ファイルを更新
+
+----------------------------------------
+//1317 [2018/10/27] by refis
+
+・スクリプト関数「getmercinfo」実装（doc/script_ref.txt, script.c）
+
+・アイテムエクスチェンジNPC追加（npc_quest_exchange.sc）
+
+----------------------------------------
+//1316 [2018/04/11] by refis
+
+・影狼、朧転職試験用モンスターが再出現しないミスを修正（npc_job_47kaboro.sc）
+
+----------------------------------------
+//1315 [2017/10/16] by refis
+
+・トキシン、パイレクシア状態の挙動を修正（status.c）
+	Thanks hikaru1112 さん
+
+・阿修羅覇凰拳の挙動を修正（skill.c）
+	Thanks ねぴぴ さん
+
+----------------------------------------
 //1314 [2017/10/16] by refis
 
 ・モンスタースキル使用条件[afterskill], [masterattacked]実装（doc/db_ref.txt, mob.*）
